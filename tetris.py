@@ -87,20 +87,23 @@ class Tetris:
         self.new_stone()
 
     def draw_board(self):
-        self.stdscr.clear()
+        max_y, max_x = self.stdscr.getmaxyx()
+        board_window = curses.newwin(height + 2, width * 2 + 2, 0, 0)
+        board_window.box()
+
         for y, row in enumerate(self.board):
             for x, cell in enumerate(row):
                 if cell:
-                    self.stdscr.addstr(y, x * 2, "[]")
+                    board_window.addstr(y + 1, x * 2 + 1, "[]")
 
         for y, row in enumerate(self.stone):
             for x, cell in enumerate(row):
                 if cell:
-                    self.stdscr.addstr(self.stone_y + y, (self.stone_x + x) * 2, "[]")
+                    board_window.addstr(self.stone_y + y + 1, (self.stone_x + x) * 2 + 1, "[]")
 
-        self.stdscr.addstr(0, 0, f"Score: {self.score}")
-        self.stdscr.addstr(1, 0, f"Level: {self.level}")
-        self.stdscr.refresh()
+        board_window.addstr(0, 0, f"Score: {self.score}")
+        board_window.addstr(1, 0, f"Level: {self.level}")
+        board_window.refresh()
 
     def drop(self):
         if not self.gameover:
